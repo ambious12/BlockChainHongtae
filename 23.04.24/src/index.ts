@@ -24,7 +24,8 @@ const accounts = new Wallet(digitalSignature)
 const sender = accounts.create()
 console.log('sender ::: ', sender)
 const recipt = accounts.receipt('0000', 30)
-console.log('recipt :: ', recipt)
+console.log('getAccounts() :: ', accounts.getAccounts())
+
 /**
 const block1 = block.createBlock(GENESIS, 'asdfasdf', GENESIS)
 console.log(block1)
