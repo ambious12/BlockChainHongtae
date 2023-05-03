@@ -25,6 +25,13 @@ class Transaction {
     }
 
     // TxOut
+    /*
+    {account:"0x0000",amount:50(REWARD)}
+    txout{
+        account!: "0x0000"
+        amount!: 50
+    }
+    */
     createTxOut(account: string, amount: number): TxOut {
         // publicKey -> 32 byte(64글자) - 12byte = 20byte
         // account -> publicKey (앞에 12 byte 날림)-> 40글자
@@ -71,7 +78,13 @@ class Transaction {
         // console.log(txoutText, text1) // hash or hash + hash
         // console.log(txinText, text2)
     }
-
+    /**
+     * TxIn {
+                txOutId?: undefined
+                txOutIndex!: 9
+                signature?: undefined
+            }
+     */
     createTxIn(txOutIndex: number, txOutId?: string, signature?: SignatureInput): TxIn {
         const txIn = new TxIn()
         txIn.txOutIndex = txOutIndex
@@ -79,7 +92,29 @@ class Transaction {
         txIn.signature = signature
         return txIn
     }
-
+    /*
+    TransactionRow{
+            txIns: [
+                {
+                    txOutId?: undefined
+                    txOutIndex!: 9
+                    signature?: undefined
+                }
+            ]
+            txOuts: [
+                {
+                    account!: "0x0000"
+                    amount!: 50
+                }
+            ]
+            hash: "askljdlkasjfl1230981ojd09812"
+    }
+    txin 
+        txout{
+            account!: "0x0000"
+            amount!: 50
+        }
+    */
     createRow(txIns: TxIn[], TxOuts: TxOut[]) {
         const transactionRow = new TransactionRow()
         transactionRow.txIns = txIns
@@ -87,8 +122,25 @@ class Transaction {
         transactionRow.hash = this.serializeRow(transactionRow)
         return transactionRow
     }
-
-    createCoinBase(account: string, latestBlockHeight: number) {
+    //  {account:"0x0000",latestBlockHeight:8}
+    /**
+     * TransactionRow{
+            txIns!: TxIn[]
+            txOuts!: TxOut[]
+            hash?: string
+        }
+        txin {
+                txOutId?: undefined
+                txOutIndex!: 9
+                signature?: undefined
+        }
+        txout{
+            account!: "0x0000"
+            amount!: 50
+        }
+        
+     */
+    createCoinBase(account: string, latestBlockHeight: number): TransactionRow {
         // 마이닝
         const txin = this.createTxIn(latestBlockHeight + 1)
         const txout = this.createTxOut(account, this.REWARD)

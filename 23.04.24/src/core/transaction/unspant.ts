@@ -53,7 +53,15 @@ class Unspent {
             })
         }
     }
-
+    /*
+    [
+        TransactionRow {
+            txIns: [ [TxIn] ],
+            txOuts: [ [TxOut] ],
+            hash: 'd7a0ff011c100b0719569822b35be7d384e258440c34c3059766430556a21aea'
+        }
+    ]
+    */
     sync(transactions: TransactionData) {
         if (typeof transactions === 'string') return
 
