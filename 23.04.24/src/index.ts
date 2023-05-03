@@ -3,10 +3,11 @@ import Block from '@core/block/block'
 import ProofOfWork from '@core/block/workproof/proofofwork'
 import WorkProof from '@core/block/workproof/wokrproof'
 import CryptoModule from '@core/crypto/crypto.module'
-import DigitalSignature from '@core/transaction/digitalSignature'
+import DigitalSignature from '@core/wallet/digitalSignature'
 import Transaction from '@core/transaction/transaction'
-import { Receipt } from '@core/transaction/transaction.interface'
 import Unspent from '@core/transaction/unspant'
+import { Receipt } from '@core/wallet/wallet.interface'
+import Wallet from '@core/wallet/wallet'
 console.log('hello bitcoin sample')
 
 // blcok을 100 , 1000개 그리기
@@ -18,7 +19,12 @@ const workProof = new WorkProof(proofofwork)
 const block = new Block(crypto, workProof)
 const transaction = new Transaction(crypto)
 const unspent = new Unspent(transaction)
+const accounts = new Wallet(digitalSignature)
 
+const sender = accounts.create()
+console.log('sender ::: ', sender)
+const recipt = accounts.receipt('0000', 30)
+console.log('recipt :: ', recipt)
 /**
 const block1 = block.createBlock(GENESIS, 'asdfasdf', GENESIS)
 console.log(block1)
@@ -52,7 +58,7 @@ console.log('blockArr :: ', blockArr)
 // 코인베이스
 // const privateKey = digitalSignature.createPrivateKey()
 // console.log(privateKey)
-
+/** */
 const privateKey = '3f90734e9349e0f0dc7e3c50473924b6e48e0a8f0d17e91af73fc6b88d7239e5'
 const publicKey = digitalSignature.createPublicKey(privateKey)
 const account = digitalSignature.createAccount(publicKey)
@@ -107,12 +113,12 @@ console.log(unspent.getUnspentTxPool())
 
 // ----- 위의 코드는 transaction 만들고싶음 ------
 
-const tx2 = transaction.create(receipt)
+// const tx2 = transaction.create(receipt)
 
 // ----- 위의 코드는 transaction 만들고싶음 ------
 
 const coinbase3 = transaction.createCoinBase(account, block2.height)
-const block3 = block.createBlock(block2, [coinbase3, tx1, tx2], GENESIS)
+const block3 = block.createBlock(block2, [coinbase3, tx1], GENESIS)
 console.log(block3)
 
 // -> sender : 70

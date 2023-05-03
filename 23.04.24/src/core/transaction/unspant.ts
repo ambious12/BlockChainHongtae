@@ -1,6 +1,6 @@
+import { Receipt } from '@core/wallet/wallet.interface'
 import Transaction from './transaction'
 import {
-    Receipt,
     TransactionRow,
     TxIn,
     TxOut,

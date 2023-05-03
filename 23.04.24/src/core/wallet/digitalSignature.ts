@@ -2,7 +2,7 @@ import CryptoModule from '@core/crypto/crypto.module'
 import { randomBytes } from 'crypto'
 import elliptic from 'elliptic'
 import { SignatureInput } from 'elliptic'
-import { Receipt } from './transaction.interface'
+import { Receipt } from './wallet.interface'
 
 // npm install elliptic
 class DigitalSignature {

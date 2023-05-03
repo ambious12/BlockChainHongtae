@@ -1,25 +1,5 @@
 import { SignatureInput } from 'elliptic'
 
-export class Sender {
-    publicKey?: string
-    account!: string
-}
-
-/**
-  예를들어 Receipt(영수증)이
-  sender:곽인구
-  received:이세욱
-  amount:20
-  signature:0x........
- */
-
-export class Receipt {
-    sender!: Sender
-    received!: string
-    amount!: number
-    signature?: SignatureInput
-}
-
 export class TxIn {
     txOutId?: string
     txOutIndex!: number
