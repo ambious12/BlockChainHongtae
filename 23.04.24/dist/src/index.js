@@ -8,9 +8,10 @@ const block_1 = __importDefault(require("@core/block/block"));
 const proofofwork_1 = __importDefault(require("@core/block/workproof/proofofwork"));
 const wokrproof_1 = __importDefault(require("@core/block/workproof/wokrproof"));
 const crypto_module_1 = __importDefault(require("@core/crypto/crypto.module"));
-const digitalSignature_1 = __importDefault(require("@core/transaction/digitalSignature"));
+const digitalSignature_1 = __importDefault(require("@core/wallet/digitalSignature"));
 const transaction_1 = __importDefault(require("@core/transaction/transaction"));
 const unspant_1 = __importDefault(require("@core/transaction/unspant"));
+const wallet_1 = __importDefault(require("@core/wallet/wallet"));
 console.log('hello bitcoin sample');
 // blcok을 100 , 1000개 그리기
 const crypto = new crypto_module_1.default();
@@ -19,7 +20,12 @@ const proofofwork = new proofofwork_1.default(crypto);
 const workProof = new wokrproof_1.default(proofofwork);
 const block = new block_1.default(crypto, workProof);
 const transaction = new transaction_1.default(crypto);
-const unspent = new unspant_1.default();
+const unspent = new unspant_1.default(transaction);
+const accounts = new wallet_1.default(digitalSignature);
+const sender = accounts.create();
+console.log('sender ::: ', sender);
+const recipt = accounts.receipt('0000', 30);
+console.log('getAccounts() :: ', accounts.getAccounts());
 /**
 const block1 = block.createBlock(GENESIS, 'asdfasdf', GENESIS)
 console.log(block1)
@@ -52,13 +58,14 @@ console.log('blockArr :: ', blockArr)
 // 코인베이스
 // const privateKey = digitalSignature.createPrivateKey()
 // console.log(privateKey)
+/** */
 const privateKey = '3f90734e9349e0f0dc7e3c50473924b6e48e0a8f0d17e91af73fc6b88d7239e5';
 const publicKey = digitalSignature.createPublicKey(privateKey);
 const account = digitalSignature.createAccount(publicKey);
 // Tx
 const coinbase2 = transaction.createCoinBase(account, block_constants_1.GENESIS.height);
-const unspentTxOuts = unspent.createUTXO(coinbase2);
-console.log(unspentTxOuts);
+unspent.createUTXO(coinbase2);
+// console.log(unspent.getUnspentTxPool())
 const block2 = block.createBlock(block_constants_1.GENESIS, [coinbase2], block_constants_1.GENESIS);
 // #3
 // 이전블럭 : 높이가 2인블럭
@@ -74,22 +81,34 @@ const receipt = {
     amount: 30,
     signature: '0000',
 };
+const flag = unspent.isAmount(account, receipt.amount);
+if (flag)
+    console.log('잔액부족');
 // createRow ? TxIn  TxOut
 // TxIn
-const txin1 = transaction.createTxIn(1, '', receipt.signature);
 // TxOut
 // 현재 보내는사람은 50
 // 받는사람은 30
 // 보내는사람의 잔액은 20
 // sender 총 수량 - amount
-const txout_sender = transaction.createTxOut(receipt.sender.account, 50 - receipt.amount);
-const txout_recevied = transaction.createTxOut(receipt.received, receipt.amount);
-const tx1 = transaction.createRow([txin1], [txout_sender, txout_recevied]);
+// TxIn ? 미사용 객체에서부터 만들어진것, -> unspent
+// unspent.getUnspentTxPool() 에서부터 sender입장에서 보낼 미사용객체를 뽑아야 함
+// 보낼사람의 미사용객체 뽑기
+// 내가 보낼 amount값이랑 얼추 비슷한 금액을 만들어야함
+const txin1 = unspent.getInput(receipt);
+const txout1 = unspent.getOutput(receipt);
+// const txout_sender = transaction.createTxOut(receipt.sender.account, 50 - receipt.amount)
+// const txout_recevied = transaction.createTxOut(receipt.received, receipt.amount)
+const tx1 = transaction.createRow(txin1, txout1);
+console.log('index :::', unspent.delete(txin1[0]));
+unspent.createUTXO(tx1);
+console.log('tx1 :: ', tx1);
+console.log(unspent.getUnspentTxPool());
 // ----- 위의 코드는 transaction 만들고싶음 ------
-const tx2 = transaction.create(receipt);
+// const tx2 = transaction.create(receipt)
 // ----- 위의 코드는 transaction 만들고싶음 ------
 const coinbase3 = transaction.createCoinBase(account, block2.height);
-const block3 = block.createBlock(block2, [coinbase3, tx1, tx2], block_constants_1.GENESIS);
+const block3 = block.createBlock(block2, [coinbase3, tx1], block_constants_1.GENESIS);
 console.log(block3);
 // -> sender : 70
 // -> received : 30

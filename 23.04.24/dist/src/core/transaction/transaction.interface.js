@@ -1,19 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UnspentTxOut = exports.TransactionRow = exports.TxOut = exports.TxIn = exports.Receipt = exports.Sender = void 0;
-class Sender {
-}
-exports.Sender = Sender;
-/**
-  예를들어 Receipt(영수증)이
-  sender:곽인구
-  received:이세욱
-  amount:20
-  signature:0x........
- */
-class Receipt {
-}
-exports.Receipt = Receipt;
+exports.UnspentTxOut = exports.TransactionRow = exports.TxOut = exports.TxIn = void 0;
 class TxIn {
 }
 exports.TxIn = TxIn;

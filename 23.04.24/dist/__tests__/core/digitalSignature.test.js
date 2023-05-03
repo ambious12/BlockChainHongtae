@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_module_1 = __importDefault(require("@core/crypto/crypto.module"));
-const digitalSignature_1 = __importDefault(require("@core/transaction/digitalSignature"));
+const digitalSignature_1 = __importDefault(require("@core/wallet/digitalSignature"));
 describe('디지털 서명 이해하기!!', () => {
     let digitalSignature;
     let crypto;
